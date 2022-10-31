@@ -1,7 +1,7 @@
-FROM nginx:1.21.6
+FROM golang:1.18
 
-COPY default.conf.template /etc/nginx/conf.d/default.conf.template
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY static-html /usr/share/nginx/html
+RUN go install github.com/muety/wakapi@latest
 
-CMD /bin/bash -c "envsubst '\$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf" && nginx -g 'daemon off;'
+RUN curl -o wakapi.yml https://raw.githubusercontent.com/muety/wakapi/master/config.default.yml
+
+CMD ./wakapi -config wakapi.yml
